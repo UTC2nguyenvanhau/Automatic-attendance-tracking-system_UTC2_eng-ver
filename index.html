@@ -2,81 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecturer Check-in Portal - UTC2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UTC2 Attendance System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#003366">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3592/3592863.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UTC2 Attendance">
 </head>
 <body>
 
-<div id="desktop-blocker" class="blocker-overlay">
-    <div class="blocker-card">
-        <h1>MOBILE ONLY</h1>
-        <p>Please access this portal via your smartphone to use BLE features.</p>
+<div id="desktop-blocker">
+    <h1 style="color: var(--error); font-size: 60px; margin-bottom: 10px;">🚫</h1>
+    <h2 style="color: var(--primary-color);">DEVICE REJECTED</h2>
+    <p style="color: #8a9ba8; font-weight: 500; font-size: 16px;">Please use a <b>Smartphone</b> to scan.<br>PCs & Laptops are not supported to ensure transparency.</p>
+</div>
+
+<div id="offline-banner">⚠️ Internet connection lost! Offline mode active.</div>
+
+<div class="neumorphic-card-light" id="main-app">
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+            <input type="checkbox" id="checkbox" onchange="toggleTheme(this)" />
+            <div class="slider"></div>
+        </label>
+    </div>
+
+    <div class="celebration-ribbon">⭐ 30/4 ⭐</div>
+
+    <div class="logo-container">
+        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Dai-Hoc-Giao-Thong-Van-Tai-UTC.png" class="logo-school" alt="UTC Logo">
+    </div>
+    
+    <h2>SMART ATTENDANCE SYSTEM</h2>
+    <div class="uni-name">Lecturer Authentication Portal</div>
+
+    <div id="login-screen">
+        <input type="number" id="login-mssv" class="form-control" placeholder="Enter Lecturer ID">
+        
+        <div class="password-wrapper">
+            <input type="password" id="login-pass" class="form-control" placeholder="Password">
+            <span class="toggle-password" onclick="togglePassword('login-pass', this)">👁️</span>
+        </div>
+        
+        <button onclick="handleLogin()" class="btn-primary" id="btnLogin">LOGIN</button>
+    </div>
+    <p style="text-align: center; margin-top: 15px; font-size: 13px; color: var(--accent-color); cursor: pointer; font-weight: bold;" onclick="forgotPassword()">
+    Forgot password?
+</p>
+
+    <div id="change-pass-screen" style="display: none;">
+        <h3 style="color: var(--error); font-size: 16px; margin-bottom: 5px;">⚠️ PLEASE CHANGE YOUR PASSWORD</h3>
+        <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px;">This is your first time logging in.</p>
+        
+        <ul class="password-rules">
+            <li>Minimum <b>6 characters</b>, maximum <b>20 characters</b>.</li>
+            <li>No <b>spaces</b> allowed.</li>
+            <li>Should contain both letters and numbers for enhanced security.</li>
+        </ul>
+
+        <div class="password-wrapper">
+            <input type="password" id="new-pass" class="form-control" placeholder="Enter new password">
+            <span class="toggle-password" onclick="togglePassword('new-pass', this)">👁️</span>
+        </div>
+        
+        <div class="password-wrapper">
+            <input type="password" id="confirm-pass" class="form-control" placeholder="Confirm new password">
+            <span class="toggle-password" onclick="togglePassword('confirm-pass', this)">👁️</span>
+        </div>
+        
+        <button onclick="handleChangePass()" class="btn-primary" id="btnChangePass">UPDATE</button>
+    </div>
+
+    <div id="attendance-screen" style="display: none;">
+        <div class="user-info">
+            <p>Welcome, <b id="student-name" style="color: var(--accent-color); font-size: 18px;"></b></p>
+            <p style="font-size: 12px; color: var(--text-gray);">Lecturer ID: <span id="student-mssv"></span></p>
+        </div>
+        
+        <select id="class-select" class="form-control" style="margin-top: 15px;">
+            <option value="">-- Loading classes --</option>
+        </select>
+
+        <button onclick="handleAttendance()" class="btn-primary btn-scan" id="btnSubmit">
+            <span>👉 TAP TO CHECK-IN</span>
+        </button>
+        <button onclick="logout()" class="btn-secondary">LOGOUT</button>
+    </div>
+
+    <div id="status-container">
+        <div class="loader" id="spinner"></div>
+        <div id="status" style="font-weight: 700; font-size: 14px; text-align: center;">Ready to connect</div>
     </div>
 </div>
 
-<div id="offline-banner">⚠️ Working Offline - Data will sync automatically.</div>
-
-<div class="container" id="main-app">
-    <div id="login-screen" class="card">
-        <h1>LECTURER PORTAL</h1>
-        <p class="subtitle">Smart Attendance System</p>
-        <div class="input-group">
-            <input type="number" id="login-mssv" placeholder="Enter Lecturer ID">
-        </div>
-        <div class="input-group">
-            <input type="password" id="login-pass" placeholder="Password">
-            <span class="toggle-pass" onclick="togglePassword('login-pass', this)">👁️</span>
-        </div>
-        <button id="btnLogin" class="btn" onclick="handleLogin()">LOGIN</button>
-        <p class="forgot-link" onclick="forgotPassword()">Forgot Password?</p>
+<div class="history-section" id="history-section">
+    <div class="history-header">
+        <span>ATTENDANCE HISTORY</span>
+        <span class="clear-btn" onclick="clearHistory()">Clear</span>
     </div>
+    <div id="history-list"></div>
+</div>
 
-    <div id="change-pass-screen" class="card" style="display:none;">
-        <h1>SECURITY UPDATE</h1>
-        <p class="subtitle">Please change your password for first-time login.</p>
-        <div class="input-group">
-            <input type="password" id="new-pass" placeholder="New Password (min 6 chars)">
-        </div>
-        <div class="input-group">
-            <input type="password" id="confirm-pass" placeholder="Confirm New Password">
-        </div>
-        <button class="btn" onclick="handleChangePass()">UPDATE PASSWORD</button>
-    </div>
-
-    <div id="attendance-screen" class="card" style="display:none;">
-        <div class="user-info">
-            <p>Welcome, <b id="student-name">Loading...</b></p>
-            <small>ID: <span id="student-mssv">...</span></small>
-        </div>
-
-        <select id="class-select" class="input-field">
-            <option value="">-- Select Course/Session --</option>
-        </select>
-
-        <div class="status-container">
-            <div id="spinner" class="loader" style="display:none;"></div>
-            <p id="status">System Ready</p>
-        </div>
-
-        <button id="btnSubmit" class="btn-checkin" onclick="handleAttendance()">
-            <span>👈 TAP TO CHECK-IN</span>
-        </button>
-
-        <button class="btn-logout" onclick="logout()">LOGOUT</button>
-    </div>
-
-    <div id="history-section">
-        <div class="history-header">
-            <h3>CHECK-IN LOGS</h3>
-            <span class="clear-btn" onclick="clearHistory()">Clear</span>
-        </div>
-        <div id="history-list">
-            </div>
-    </div>
+<div class="footer" id="main-footer">
+    Celebrating 51 years of Southern Liberation Day (April 30, 1975 - April 30, 2026)<br>
+    © 2026 Scientific Research - Embedded Systems & IoT<br>
+    Security: ESP32 BLE + Cloud Anti-Cheat
 </div>
 
 <script src="script.js"></script>
