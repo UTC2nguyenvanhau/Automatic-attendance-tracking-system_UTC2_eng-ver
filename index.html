@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Check-in Portal - UTC2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div id="desktop-blocker" class="blocker-overlay">
+    <div class="blocker-card">
+        <h1>MOBILE ONLY</h1>
+        <p>Please access this portal via your smartphone to use BLE features.</p>
+    </div>
+</div>
+
+<div id="offline-banner">⚠️ Working Offline - Data will sync automatically.</div>
+
+<div class="container" id="main-app">
+    <div id="login-screen" class="card">
+        <h1>LECTURER PORTAL</h1>
+        <p class="subtitle">Smart Attendance System</p>
+        <div class="input-group">
+            <input type="number" id="login-mssv" placeholder="Enter Lecturer ID">
+        </div>
+        <div class="input-group">
+            <input type="password" id="login-pass" placeholder="Password">
+            <span class="toggle-pass" onclick="togglePassword('login-pass', this)">👁️</span>
+        </div>
+        <button id="btnLogin" class="btn" onclick="handleLogin()">LOGIN</button>
+        <p class="forgot-link" onclick="forgotPassword()">Forgot Password?</p>
+    </div>
+
+    <div id="change-pass-screen" class="card" style="display:none;">
+        <h1>SECURITY UPDATE</h1>
+        <p class="subtitle">Please change your password for first-time login.</p>
+        <div class="input-group">
+            <input type="password" id="new-pass" placeholder="New Password (min 6 chars)">
+        </div>
+        <div class="input-group">
+            <input type="password" id="confirm-pass" placeholder="Confirm New Password">
+        </div>
+        <button class="btn" onclick="handleChangePass()">UPDATE PASSWORD</button>
+    </div>
+
+    <div id="attendance-screen" class="card" style="display:none;">
+        <div class="user-info">
+            <p>Welcome, <b id="student-name">Loading...</b></p>
+            <small>ID: <span id="student-mssv">...</span></small>
+        </div>
+
+        <select id="class-select" class="input-field">
+            <option value="">-- Select Course/Session --</option>
+        </select>
+
+        <div class="status-container">
+            <div id="spinner" class="loader" style="display:none;"></div>
+            <p id="status">System Ready</p>
+        </div>
+
+        <button id="btnSubmit" class="btn-checkin" onclick="handleAttendance()">
+            <span>👈 TAP TO CHECK-IN</span>
+        </button>
+
+        <button class="btn-logout" onclick="logout()">LOGOUT</button>
+    </div>
+
+    <div id="history-section">
+        <div class="history-header">
+            <h3>CHECK-IN LOGS</h3>
+            <span class="clear-btn" onclick="clearHistory()">Clear</span>
+        </div>
+        <div id="history-list">
+            </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
