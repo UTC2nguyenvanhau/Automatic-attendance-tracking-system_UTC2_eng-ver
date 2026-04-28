@@ -1,0 +1,8 @@
+{
+  "short_name": "Lec Attendance",
+  "name": "UTC2 Lecturer Attendance System",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#003366",
+  "background_color": "#ffffff"
+}
