@@ -94,4 +94,12 @@ async function handleAttendance() {
             if (result.success) { setStatus("🎉 Success", "success"); addHistory(classId, true); Swal.fire('Success!', result.message, 'success'); } 
             else { setStatus("⚠️ Error", "error"); addHistory(classId, false); Swal.fire('Warning!', result.message, 'error'); }
         } catch (e) { btn.disabled = false; localStorage.setItem('utc2_offline_sync', url); setStatus("📥 Saved Offline", "error"); addHistory(classId + " (Offline)", true); Swal.fire('Weak Network!', 'Saved Offline.', 'warning'); }
-    } catch (e) { btn.disabled = false; set
+    } catch (e) { 
+        btn.disabled = false; 
+        setStatus("❌ Station not found", "error"); 
+        Swal.fire('Bluetooth Error', 'Stand closer to the device and try again.', 'error'); 
+    }
+}
+
+function addHistory(c, s) { const lst = document.getElementById('history-list'); const now = new Date(); lst.innerHTML = `<div class="history-card"><div class="history-info"><span class="h-mssv">${c}</span><span class="h-time">${now.toLocaleTimeString('en-US')}</span></div><span class="h-status ${s ? 'h-success' : 'h-error'}">${s ? 'OK' : 'Failed'}</span></div>` + lst.innerHTML; }
+function clearHistory() { document.getElementById('history-list').innerHTML = ''; }
