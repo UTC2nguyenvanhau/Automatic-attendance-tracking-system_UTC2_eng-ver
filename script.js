@@ -1,5 +1,5 @@
 // Replace YOUR LINK here (Created with personal Gmail, Access: Anyone)
-const scriptURL = 'https://script.google.com/macros/s/AKfycbytXOd7q3oxAArpRvJOfQGz4TtXz1JPljLEVdSwMl3nPBG_GbAAU4cFrQ0li3g9sZIA/exec'; 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbx2-p04tbNCjWrOo-FMtGJzFB-f7rkJ1Tlr-o0gJGPGQRkP5Yiqorsc6Jxv3CucWq6S/exec'; 
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
